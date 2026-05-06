@@ -1,0 +1,184 @@
+---
+title: "Basic Needs Center Peer Conversations"
+author: "Noah Adams"
+format: html
+editor: visual
+---
+
+```{r}
+#| echo: false
+suppressPackageStartupMessages(library(tidyverse))
+```
+
+```{r}
+#| echo: false
+pal <- c("#6C88C4","#FF828B","#E7C582")
+```
+
+```{r}
+#| echo: false
+referrals <- read.csv('Referrals.csv')
+
+month_order <- c("Sept", "Oct", "Nov", "Dec", "Jan", "Feb","Mar")
+
+referrals <- referrals |>
+  pivot_longer(cols = -1,
+                names_to = 'Program',
+                values_to = 'Count') |>
+    rename(Month = Referral) |>
+  mutate(Month = factor(Month, levels = month_order))
+```
+
+# What is a Peer Conversation?
+
+At the OSU Basic Needs Center, we have strategy conversations with students about housing, food, living on a limited budget, and anything else related to someone’s basic needs. Following these conversations, we fill out a form recording what referrals were made, and what the conversation was about. In this report, I hope to analyze and further explore the peer conversations we have at the BNC.
+
+*Please note that the data for September has been measured only from the 15th to the 30th.*
+
+## Conversations Over Time
+
+```{r}
+#| echo: false
+
+convo_counts = c(77, 51, 37, 17, 56, 23, 40)
+
+convo_totals <- data.frame(Month = factor(month_order, levels = month_order), Count = convo_counts)
+
+ggplot(convo_totals, aes(x = Month, y = Count)) +
+  geom_col() +
+  theme(text=element_text(size=13, family="Arial")) +
+  geom_text(aes(label = Count), vjust = 2, color = "white", size = 3.5) +
+  theme_bw() +
+  labs(
+    title = 'Monthly Peer Convos'
+  )
+```
+
+## Referrals During Peer Conversations
+
+### Summary of Referrals
+
+```{r}
+#| echo: false
+referral_summary <- referrals |>
+  group_by(Program) |>
+  summarize(Count = sum(Count)) |>
+  arrange(desc(Count)) |>
+  mutate(Program = factor(Program, levels = Program))
+
+programs = c('BNC Program', 'BNC Food Pantry', 'SNAP/WIC', 'Other College Office', 'Housing Org or Shelter', 'Other Community Org', 'Financial Aid/CAFE/Student Account', 'Off-campus Food Pantry', 'OHP', 'Career Development Ctr', 'Social Services', 'Career/Employment Org', 'Legal Support', 'Housing Authority', 'Childcare', 'Other Govt Agency', 'Student Care', 'TANF')
+
+ggplot(referral_summary, aes(x = Program, y = Count)) +
+  geom_col() +
+  scale_x_discrete(labels = programs) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        text=element_text(size=13, family="Arial"))
+```
+## Subsets of Program Data
+
+### Food Program Referrals
+
+```{r}
+#| echo: false
+
+# Isolate the food programs
+food_programs <- referrals |>
+  filter(Program == c('SNAP.WIC', 'BNC.Food.Pantry', 'Off.Campus.Food.Bank')) |>
+  mutate(Program = factor(Program, levels = c('BNC.Food.Pantry', 'SNAP.WIC', 'Off.Campus.Food.Bank')))
+  
+# Create barplot of food programs
+ggplot(data = food_programs, aes(x = Month, y = Count, fill = Program)) +
+  geom_col(position = 'dodge') +
+  scale_fill_manual(values = pal) +
+  theme_bw() +
+  theme(text=element_text(size=13, family="Arial"))
+```
+
+### Housing Program Referrals
+
+```{r}
+#| echo: false
+# Isolate housing programs
+
+housing_programs <- referrals |>
+  filter(Program == 'Housing.Org..or.Shelter' | Program == 'Housing.Authority')
+
+ggplot(data = housing_programs, aes(x = Month, y = Count, fill = Program)) +
+  geom_col() +
+  theme_bw() +
+  theme(text=element_text(size=13, family="Arial"))
+```
+
+### Heatmap of Referrals
+
+```{r}
+#| echo: false
+
+heatmap_programs <- c('BNC Food Pantry', 'BNC Program/Service', 'Career/Employment Org', 'Career Development Ctr', 'Childcare', 'Financial Aid')
+
+ggplot(referrals, aes(Month, Program)) +
+  geom_tile(aes(fill = Count), color = "white") +
+  scale_fill_gradient(low = "white", high = "#E15759") +
+  theme_bw() +
+  scale_y_discrete()
+  theme(text=element_text(size=13, family="Arial"))
+```
+
+## Topics of Conversations
+
+```{r}
+#| echo: false
+topics <- read.csv('Topics.csv')
+
+topics <- topics |>
+  pivot_longer(cols = -1,
+                names_to = 'Program',
+                values_to = 'Count') |>
+    rename(Month = Topic) |>
+    mutate(Month = factor(Month, levels = month_order))
+
+```
+
+### Summary of Topics
+
+```{r}
+#| echo: false
+topics_summary <- topics |>
+  group_by(Program) |>
+  summarize(Count = sum(Count)) |>
+  arrange(desc(Count)) |>
+  mutate(Program = factor(Program, levels = Program))
+
+ggplot(topics_summary, aes(x = Program, y = Count)) +
+  geom_col() +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        text=element_text(size=13, family="Arial"))
+```
+
+### Three Main Topics
+
+```{r}
+#| echo: false
+top3 <- topics |>
+  filter(Program == 'Food' | Program == 'Housing' | Program == 'Technology')
+
+ggplot(top3, aes(x = Month, y = Count, fill = Program)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~Program) +
+  scale_fill_manual(values = pal) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+    text=element_text(size=11, family="Arial"))
+```
+
+### Bubble Chart of Topics
+
+```{r}
+#| echo: false
+ggplot(topics, aes(x = Month, y = Program, size = Count)) +
+  geom_point(alpha = 0.7) +
+  theme_bw() +
+  theme(text=element_text(size=13, family="Arial"))
+```
