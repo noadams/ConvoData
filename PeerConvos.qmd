@@ -121,7 +121,7 @@ ggplot(referrals, aes(Month, Program)) +
   geom_tile(aes(fill = Count), color = "white") +
   scale_fill_gradient(low = "white", high = "#E15759") +
   theme_bw() +
-  scale_y_discrete()
+  scale_y_discrete() +
   theme(text=element_text(size=13, family="Arial"))
 ```
 
