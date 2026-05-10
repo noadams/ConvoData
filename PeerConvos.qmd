@@ -38,6 +38,7 @@ At the OSU Basic Needs Center, we have strategy conversations with students abou
 ## Conversations Over Time
 
 ```{r}
+#| label: Monthly Peer Convos
 #| echo: false
 
 convo_counts = c(77, 51, 37, 17, 56, 23, 40)
@@ -59,7 +60,9 @@ ggplot(convo_totals, aes(x = Month, y = Count)) +
 ### Summary of Referrals
 
 ```{r}
+#| label: Summary of Referrals
 #| echo: false
+
 referral_summary <- referrals |>
   group_by(Program) |>
   summarize(Count = sum(Count)) |>
@@ -73,13 +76,18 @@ ggplot(referral_summary, aes(x = Program, y = Count)) +
   scale_x_discrete(labels = programs) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        text=element_text(size=13, family="Arial"))
+        text=element_text(size=13, family="Arial")) +
+  labs(
+    title = 'Program Referrals'
+  )
 ```
+
 ## Subsets of Program Data
 
 ### Food Program Referrals
 
 ```{r}
+#| label: Food Program Referrals
 #| echo: false
 
 # Isolate the food programs
@@ -92,22 +100,29 @@ ggplot(data = food_programs, aes(x = Month, y = Count, fill = Program)) +
   geom_col(position = 'dodge') +
   scale_fill_manual(values = pal) +
   theme_bw() +
-  theme(text=element_text(size=13, family="Arial"))
+  theme(text=element_text(size=13, family="Arial")) +
+  labs(
+    title = 'Food Program Referrals'
+  )
 ```
 
 ### Housing Program Referrals
 
 ```{r}
+#| label: Housing Program Referrals
 #| echo: false
-# Isolate housing programs
 
+# Isolate housing programs
 housing_programs <- referrals |>
   filter(Program == 'Housing.Org..or.Shelter' | Program == 'Housing.Authority')
 
 ggplot(data = housing_programs, aes(x = Month, y = Count, fill = Program)) +
   geom_col() +
   theme_bw() +
-  theme(text=element_text(size=13, family="Arial"))
+  theme(text=element_text(size=13, family="Arial")) +
+  labs(
+    title = 'Housing Program Referrals'
+  )
 ```
 
 ### Heatmap of Referrals
@@ -143,7 +158,9 @@ topics <- topics |>
 ### Summary of Topics
 
 ```{r}
+#| label: Summary of Topics
 #| echo: false
+
 topics_summary <- topics |>
   group_by(Program) |>
   summarize(Count = sum(Count)) |>
@@ -154,13 +171,18 @@ ggplot(topics_summary, aes(x = Program, y = Count)) +
   geom_col() +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        text=element_text(size=13, family="Arial"))
+        text=element_text(size=13, family="Arial")) +
+  labs(
+    title = 'Summary of Convo Topics'
+  )
 ```
 
 ### Three Main Topics
 
 ```{r}
+#| label: Three Main Topics
 #| echo: false
+
 top3 <- topics |>
   filter(Program == 'Food' | Program == 'Housing' | Program == 'Technology')
 
@@ -170,7 +192,10 @@ ggplot(top3, aes(x = Month, y = Count, fill = Program)) +
   scale_fill_manual(values = pal) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
-    text=element_text(size=11, family="Arial"))
+    text=element_text(size=11, family="Arial")) +
+  labs(
+    title = 'Three Main Topics'
+  )
 ```
 
 ### Bubble Chart of Topics
