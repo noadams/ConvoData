@@ -1,7 +1,7 @@
 ---
 title: "Basic Needs Center Peer Conversations"
 author: "Noah Adams"
-format: pdf
+format: html
 editor: visual
 ---
 
@@ -12,7 +12,7 @@ suppressPackageStartupMessages(library(tidyverse))
 
 ```{r}
 #| echo: false
-pal <- c("#6C88C4","#FF828B","#E7C582")
+pal <- c("#6C88C4","#FF828B","#FFB347")
 ```
 
 ```{r}
@@ -124,7 +124,6 @@ ggplot(food_pantries, aes(Program, Count, color = Program)) +
   labs(
     title = 'Monthly Food Program Referrals',
   ) +
-  scale_fill_manual(values = c("#6C88C4","#FF828B")) +
   scale_x_discrete(label = labels)
 ```
 
@@ -187,7 +186,7 @@ ggplot(topics_summary, aes(x = Program, y = Count)) +
 ### Three Main Topics
 
 ```{r}
-#| label: Three Main Topics
+#| label: Three Main Conversation Topics
 #| echo: false
 
 top3 <- topics |>
@@ -201,7 +200,7 @@ ggplot(top3, aes(x = Month, y = Count, fill = Program)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
     text=element_text(size=11, family="sans")) +
   labs(
-    title = 'Three Main Topics'
+    title = 'Three Main Conversation Topics'
   )
 ```
 
