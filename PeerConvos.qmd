@@ -1,7 +1,7 @@
 ---
 title: "Basic Needs Center Peer Conversations"
 author: "Noah Adams"
-format: html
+format: pdf
 editor: visual
 ---
 
@@ -19,7 +19,7 @@ pal <- c("#6C88C4","#FF828B","#E7C582")
 #| echo: false
 referrals <- read.csv('Referrals.csv')
 
-month_order <- c("Sept", "Oct", "Nov", "Dec", "Jan", "Feb","Mar")
+month_order <- c("Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar")
 
 referrals <- referrals |>
   pivot_longer(cols = -1,
@@ -106,6 +106,28 @@ ggplot(data = food_programs, aes(x = Month, y = Count, fill = Program)) +
   )
 ```
 
+```{r}
+#| label: BNC vs. Outside Pantry Referrals
+#| echo: false
+
+food_pantries <- referrals |>
+  filter(Program == c('Off.Campus.Food.Bank', 'BNC.Food.Pantry')) |>
+  mutate(Program = factor(Program, levels = c('BNC.Food.Pantry', 'Off.Campus.Food.Bank')))
+
+labels <- c('BNC Food Pantry', 'Off Campus Food Bank')
+
+ggplot(food_pantries, aes(Program, Count, color = Program)) +
+  geom_boxplot(outlier.shape = NA) + geom_jitter(width = 0.09) +
+  theme_bw() +
+  theme(text=element_text(size=13, family="sans"),
+        legend.position = "none")+
+  labs(
+    title = 'Monthly Food Program Referrals',
+  ) +
+  scale_fill_manual(values = c("#6C88C4","#FF828B")) +
+  scale_x_discrete(label = labels)
+```
+
 ### Housing Program Referrals
 
 ```{r}
@@ -123,21 +145,6 @@ ggplot(data = housing_programs, aes(x = Month, y = Count, fill = Program)) +
   labs(
     title = 'Housing Program Referrals'
   )
-```
-
-### Heatmap of Referrals
-
-```{r}
-#| echo: false
-
-heatmap_programs <- c('BNC Food Pantry', 'BNC Program/Service', 'Career/Employment Org', 'Career Development Ctr', 'Childcare', 'Financial Aid')
-
-ggplot(referrals, aes(Month, Program)) +
-  geom_tile(aes(fill = Count), color = "white") +
-  scale_fill_gradient(low = "white", high = "#E15759") +
-  theme_bw() +
-  scale_y_discrete() +
-  theme(text=element_text(size=13, family="sans"))
 ```
 
 ## Topics of Conversations
@@ -198,12 +205,23 @@ ggplot(top3, aes(x = Month, y = Count, fill = Program)) +
   )
 ```
 
-### Bubble Chart of Topics
-
 ```{r}
 #| echo: false
+#| eval: false
 ggplot(topics, aes(x = Month, y = Program, size = Count)) +
   geom_point(alpha = 0.7) +
   theme_bw() +
+  theme(text=element_text(size=13, family="sans"))
+```
+
+```{r}
+#| echo: false
+#| eval: false
+
+ggplot(referrals, aes(Month, Program)) +
+  geom_tile(aes(fill = Count), color = "white") +
+  scale_fill_gradient(low = "white", high = "#E15759") +
+  theme_bw() +
+  scale_y_discrete() +
   theme(text=element_text(size=13, family="sans"))
 ```
