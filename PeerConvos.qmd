@@ -19,7 +19,7 @@ pal <- c("#6C88C4","#FF828B","#FFB347")
 #| echo: false
 referrals <- read.csv('Referrals.csv')
 
-month_order <- c("Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar")
+month_order <- c("Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr")
 
 referrals <- referrals |>
   pivot_longer(cols = -1,
@@ -41,7 +41,7 @@ At the OSU Basic Needs Center, we have strategy conversations with students abou
 #| label: Monthly Peer Convos
 #| echo: false
 
-convo_counts = c(77, 51, 37, 17, 56, 23, 40)
+convo_counts = c(77, 51, 37, 17, 56, 23, 40, 44)
 
 convo_totals <- data.frame(Month = factor(month_order, levels = month_order), Count = convo_counts)
 
