@@ -37,6 +37,8 @@ At the OSU Basic Needs Center, we have strategy conversations with students abou
 
 ## Conversations Over Time
 
+A noticeable pattern is the big surges of convos at the start of the term. The drop in December could be explained by Winter Break.
+
 ```{r}
 #| label: Monthly Peer Convos
 #| echo: false
@@ -56,6 +58,8 @@ ggplot(convo_totals, aes(x = Month, y = Count)) +
 ```
 
 ## Referrals During Peer Conversations
+
+Frequently during conos, we refer people to other resources both on and off campus. Helping people utilize the full network of resources available to them is crucial.
 
 ### Summary of Referrals
 
@@ -82,9 +86,11 @@ ggplot(referral_summary, aes(x = Program, y = Count)) +
   )
 ```
 
-## Subsets of Program Data
+### Subsets of Program Data
 
-### Food Program Referrals
+Below, the referrals made for resources relevant to two of our major areas of support, food and housing, are isolated and count is shown over time.
+
+#### Food Program Referrals
 
 ```{r}
 #| label: Food Program Referrals
@@ -105,6 +111,8 @@ ggplot(data = food_programs, aes(x = Month, y = Count, fill = Program)) +
     title = 'Food Program Referrals'
   )
 ```
+
+While referrals to the BNC Food Pantry are high, the bar chart above and the box plot below highlight that we don't make a lot of referrals to off-campus food banks, when maybe we should as part of someone's food strategy.
 
 ```{r}
 #| label: BNC vs. Outside Pantry Referrals
@@ -127,7 +135,7 @@ ggplot(food_pantries, aes(Program, Count, color = Program)) +
   scale_x_discrete(label = labels)
 ```
 
-### Housing Program Referrals
+#### Housing Program Referrals
 
 ```{r}
 #| label: Housing Program Referrals
@@ -162,6 +170,8 @@ topics <- topics |>
 ```
 
 ### Summary of Topics
+
+Breaking down what kinds of conversations we are having, a clear trend arises of focusing on food, housing, and technology.
 
 ```{r}
 #| label: Summary of Topics
