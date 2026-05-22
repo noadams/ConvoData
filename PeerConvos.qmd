@@ -1,21 +1,29 @@
 ---
 title: "Basic Needs Center: Peer Conversations"
 author: "Noah Adams"
+date: today
 format: html
 editor: visual
+
+include-in-header:
+  - text: |
+     <link rel = "shortcut icon" href = "logo.png" />
 ---
 
 ```{r}
+#| label: Libraries
 #| echo: false
 suppressPackageStartupMessages(library(tidyverse))
 ```
 
 ```{r}
+#| label: Palette
 #| echo: false
 pal <- c("#6C88C4","#FF828B","#FFB347")
 ```
 
 ```{r}
+#| label: Referral Data Processing
 #| echo: false
 referrals <- read.csv('Referrals.csv')
 
@@ -59,7 +67,7 @@ ggplot(convo_totals, aes(x = Month, y = Count)) +
 
 ## Referrals During Peer Conversations
 
-Frequently during conos, we refer people to other resources both on and off campus. Helping people utilize the full network of resources available to them is crucial.
+Frequently during convos, we refer people to other resources both on and off campus. Helping people utilize the full network of resources available to them is crucial.
 
 ### Summary of Referrals
 
@@ -82,7 +90,7 @@ ggplot(referral_summary, aes(x = Program, y = Count)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         text=element_text(size=13, family="sans")) +
   labs(
-    title = 'Program Referrals'
+    title = 'Total Program Referrals'
   )
 ```
 
@@ -108,7 +116,7 @@ ggplot(data = food_programs, aes(x = Month, y = Count, fill = Program)) +
   theme_bw() +
   theme(text=element_text(size=13, family="sans")) +
   labs(
-    title = 'Food Program Referrals'
+    title = 'Food Program Referrals per Month'
   )
 ```
 
@@ -216,7 +224,24 @@ ggplot(top3, aes(x = Month, y = Count, fill = Program)) +
 
 ```{r}
 #| echo: false
+
+top3 <- topics |>
+  filter(Program == 'Food' | Program == 'Housing' | Program == 'Technology')
+
+ggplot(top3, aes(x = Month, y = Count, group = Program)) +
+  geom_line(aes(color = Program)) +
+  geom_point(aes(color = Program)) +
+  scale_color_manual(values = pal) +
+  theme_bw() +
+  labs(
+    title = 'Three Main Conversation Topics'
+  )
+```
+
+```{r}
+#| label: Bubble Plot
 #| eval: false
+#| echo: false
 ggplot(topics, aes(x = Month, y = Program, size = Count)) +
   geom_point(alpha = 0.7) +
   theme_bw() +
@@ -224,12 +249,13 @@ ggplot(topics, aes(x = Month, y = Program, size = Count)) +
 ```
 
 ```{r}
-#| echo: false
+#| label: Heatmap
 #| eval: false
+#| echo: false
 
 ggplot(referrals, aes(Month, Program)) +
   geom_tile(aes(fill = Count), color = "white") +
-  scale_fill_gradient(low = "white", high = "#E15759") +
+  scale_fill_gradient(low = "white", high = "maroon") +
   theme_bw() +
   scale_y_discrete() +
   theme(text=element_text(size=13, family="sans"))
