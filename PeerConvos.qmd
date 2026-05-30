@@ -14,6 +14,7 @@ include-in-header:
 #| label: Libraries
 #| echo: false
 suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(gt))
 ```
 
 ```{r}
@@ -120,27 +121,35 @@ ggplot(data = food_programs, aes(x = Month, y = Count, fill = Program)) +
   )
 ```
 
-While referrals to the BNC Food Pantry are high, the bar chart above and the box plot below highlight that we don't make a lot of referrals to off-campus food banks, when maybe we should as part of someone's food strategy.
+While referrals to the BNC Food Pantry are high, the bar chart above and the table below highlight that we don't make many referrals to off-campus food banks, when maybe we should as part of someone's food strategy.
 
 ```{r}
-#| label: BNC vs. Outside Pantry Referrals
+#| label: Food Pantry Referrals Table
 #| echo: false
 
 food_pantries <- referrals |>
   filter(Program == c('Off.Campus.Food.Bank', 'BNC.Food.Pantry')) |>
   mutate(Program = factor(Program, levels = c('BNC.Food.Pantry', 'Off.Campus.Food.Bank')))
 
-labels <- c('BNC Food Pantry', 'Off Campus Food Bank')
+pantries_wide <- food_pantries |>
+  pivot_wider(names_from = Program, values_from = Count)
 
-ggplot(food_pantries, aes(Program, Count, color = Program)) +
-  geom_boxplot(outlier.shape = NA) + geom_jitter(width = 0.09) +
-  theme_bw() +
-  theme(text=element_text(size=13, family="sans"),
-        legend.position = "none")+
-  labs(
-    title = 'Monthly Food Program Referrals',
-  ) +
-  scale_x_discrete(label = labels)
+pantries_wide |>
+  gt() |>
+  cols_label(
+    'BNC.Food.Pantry' = 'BNC Food Pantry',
+    'Off.Campus.Food.Bank' = 'Off Campus Food Bank'
+  ) |>
+  tab_header(
+    title = 'Food Pantry Referrals',
+    subtitle = 'BNC Food Pantry has significantly higher referrals than off campus'
+  ) |>
+  tab_options(
+    heading.background.color = '#dcd5e7'
+  ) |>
+  opt_table_font(
+    font = 'sans'
+  )
 ```
 
 #### Housing Program Referrals
@@ -259,4 +268,26 @@ ggplot(referrals, aes(Month, Program)) +
   theme_bw() +
   scale_y_discrete() +
   theme(text=element_text(size=13, family="sans"))
+```
+
+```{r}
+#| label: BNC vs. Outside Pantry Referrals
+#| echo: false
+#| eval: false
+
+food_pantries <- referrals |>
+  filter(Program == c('Off.Campus.Food.Bank', 'BNC.Food.Pantry')) |>
+  mutate(Program = factor(Program, levels = c('BNC.Food.Pantry', 'Off.Campus.Food.Bank')))
+
+labels <- c('BNC Food Pantry', 'Off Campus Food Bank')
+
+ggplot(food_pantries, aes(Program, Count, color = Program)) +
+  geom_boxplot(outlier.shape = NA) + geom_jitter(width = 0.09) +
+  theme_bw() +
+  theme(text=element_text(size=13, family="sans"),
+        legend.position = "none")+
+  labs(
+    title = 'Monthly Food Program Referrals',
+  ) +
+  scale_x_discrete(label = labels)
 ```
