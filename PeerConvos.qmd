@@ -108,8 +108,12 @@ Below, the referrals made for resources relevant to two of our major areas of su
 # Isolate the food programs
 food_programs <- referrals |>
   filter(Program == c('SNAP.WIC', 'BNC.Food.Pantry', 'Off.Campus.Food.Bank')) |>
-  mutate(Program = factor(Program, levels = c('BNC.Food.Pantry', 'SNAP.WIC', 'Off.Campus.Food.Bank')))
-  
+  mutate(Program = factor(Program, levels = c('BNC.Food.Pantry', 'SNAP.WIC', 'Off.Campus.Food.Bank'))) |>
+  mutate(Program = recode(Program,
+  'BNC.Food.Pantry' = 'BNC Food Pantry',
+  'SNAP.WIC' = 'SNAP/WIC',
+  'Off.Campus.Food.Bank' = 'Off Campus Food Bank'))
+
 # Create barplot of food programs
 ggplot(data = food_programs, aes(x = Month, y = Count, fill = Program)) +
   geom_col(position = 'dodge') +
@@ -160,7 +164,11 @@ pantries_wide |>
 
 # Isolate housing programs
 housing_programs <- referrals |>
-  filter(Program == 'Housing.Org..or.Shelter' | Program == 'Housing.Authority')
+  filter(Program == 'Housing.Org..or.Shelter' | Program == 'Housing.Authority') |>
+  mutate(Program = recode(Program,
+  'Housing.Org..or.Shelter' = 'Housing Org or Shelter',
+  'Housing.Authority' = 'Housing Authority'
+  ))
 
 ggplot(data = housing_programs, aes(x = Month, y = Count, fill = Program)) +
   geom_col() +
