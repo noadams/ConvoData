@@ -82,7 +82,7 @@ ggplot(convo_totals, aes(x = Month, y = Count)) +
   geom_text(aes(label = Count), vjust = 2, color = "white", size = 3.5) +
   theme_bw() +
   labs(
-    title = 'Monthly Peer Convos'
+    title = 'High number of convos at the start of the term'
   )
 ```
 
@@ -108,7 +108,7 @@ ggplot(referral_summary, aes(x = Program, y = Count)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         text=element_text(size=13, family="sans")) +
   labs(
-    title = 'Total Program Referrals'
+    title = 'BNC Programs are leading referrals'
   )
 ```
 
@@ -230,7 +230,7 @@ ggplot(topics_summary, aes(x = Program, y = Count)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         text=element_text(size=13, family="sans")) +
   labs(
-    title = 'Summary of Convo Topics'
+    title = 'Food, housing, and technology are main convo topics'
   )
 ```
 
@@ -248,7 +248,7 @@ ggplot(top3, aes(x = Month, y = Count, group = Program)) +
   scale_color_manual(values = pal) +
   theme_bw() +
   labs(
-    title = 'Three Main Conversation Topics'
+    title = 'Food, housing, and technology trends over time'
   )
 ```
 
