@@ -165,6 +165,8 @@ pantries_wide |>
 
 #### Housing Program Referrals
 
+While this doesn't take Emergency Housing into account, it helps us see what referrals are being made. Significantly more referrals are made to a housing organization or a shelter, as opposed to housing authority (a policy advocate and resource provider). This illustrates potential deficits in team knowledge and ability to make referrals to certain programs.
+
 ```{r}
 #| label: Housing Program Referrals
 #| echo: false
