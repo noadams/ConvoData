@@ -174,7 +174,7 @@ housing_programs <- referrals |>
   filter(Program == 'Housing Org or Shelter' | Program == 'Housing Authority')
 
 ggplot(data = housing_programs, aes(x = Month, y = Count, fill = Program)) +
-  geom_col() +
+  geom_col(position = 'dodge') +
   theme_bw() +
   theme(text=element_text(size=13, family="sans")) +
   labs(
@@ -249,6 +249,20 @@ ggplot(top3, aes(x = Month, y = Count, group = Program)) +
     title = 'Food, housing, and technology trends over time'
   )
 ```
+
+## Acronyms
+
+`BNC`: Basic Needs Center
+
+`SNAP`: Supplemental Nutrition Assistance Program
+
+`WIC`: Women, Infants, and Children (nutrition assistance)
+
+`CAFE`: Center for Advancing Financial Education
+
+`OHP`: Oregon Health Plan
+
+`TANF`: Temporary Assistance for Needy Families (cash benefits)
 
 ```{r}
 #| label: Bubble Plot
