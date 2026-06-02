@@ -35,9 +35,7 @@ referrals <- referrals |>
                 names_to = 'Program',
                 values_to = 'Count') |>
     rename(Month = Referral) |>
-  mutate(Month = factor(Month, levels = month_order))
-
-referrals <- referrals |>
+  mutate(Month = factor(Month, levels = month_order)) |>
   mutate(Program = recode(Program,
   'BNC.Food.Pantry' = 'BNC Food Pantry',
   'SNAP.WIC' = 'SNAP/WIC',
