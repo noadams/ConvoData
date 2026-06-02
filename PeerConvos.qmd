@@ -36,6 +36,26 @@ referrals <- referrals |>
                 values_to = 'Count') |>
     rename(Month = Referral) |>
   mutate(Month = factor(Month, levels = month_order))
+
+referrals <- referrals |>
+  mutate(Program = recode(Program,
+  'BNC.Food.Pantry' = 'BNC Food Pantry',
+  'SNAP.WIC' = 'SNAP/WIC',
+  'Off.Campus.Food.Bank' = 'Off Campus Food Bank',
+  'BNC.Program.Service' = 'BNC Program',
+  'Other.College.Dept..Office' = 'Other College Dept or Office',
+  'Housing.Org..or.Shelter' = 'Housing Org or Shelter',
+  'Other.Community.Based.Org.' = 'Other Community Based Org',
+  'Financial.Aid..CAFE..Student.Accounts..Emergency.grants' = 'Financial Aid/CAFE/Emergency Grants',
+  'Oregon.Health.Plan..OHP.' = 'Oregon Health Plan (OHP)',
+  'Career.Development.Ctr' = 'Career Development Ctr',
+  'Social.Services..Self.Help' = 'Social Services / Self Help',
+  'Career...Employment.Org.' = 'Career Employment Org',
+  'Housing.Authority' = 'Housing Authority',
+  'Legal.Support' = 'Legal Support',
+  'Other.Govt..Agency' = 'Other Govt Agency',
+  'Child.Care' = 'Child Care',
+  'Student.Care' = 'Student Care'))
 ```
 
 # What is a Peer Conversation?
@@ -82,11 +102,8 @@ referral_summary <- referrals |>
   arrange(desc(Count)) |>
   mutate(Program = factor(Program, levels = Program))
 
-programs = c('BNC Program', 'BNC Food Pantry', 'SNAP/WIC', 'Other College Office', 'Housing Org or Shelter', 'Other Community Org', 'Financial Aid/CAFE/Student Account', 'Off-campus Food Pantry', 'OHP', 'Career Development Ctr', 'Social Services', 'Career/Employment Org', 'Legal Support', 'Housing Authority', 'Childcare', 'Other Govt Agency', 'Student Care', 'TANF')
-
 ggplot(referral_summary, aes(x = Program, y = Count)) +
   geom_col() +
-  scale_x_discrete(labels = programs) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         text=element_text(size=13, family="sans")) +
@@ -107,12 +124,8 @@ Below, the referrals made for resources relevant to two of our major areas of su
 
 # Isolate the food programs
 food_programs <- referrals |>
-  filter(Program == c('SNAP.WIC', 'BNC.Food.Pantry', 'Off.Campus.Food.Bank')) |>
-  mutate(Program = factor(Program, levels = c('BNC.Food.Pantry', 'SNAP.WIC', 'Off.Campus.Food.Bank'))) |>
-  mutate(Program = recode(Program,
-  'BNC.Food.Pantry' = 'BNC Food Pantry',
-  'SNAP.WIC' = 'SNAP/WIC',
-  'Off.Campus.Food.Bank' = 'Off Campus Food Bank'))
+  filter(Program == c('SNAP/WIC', 'BNC Food Pantry', 'Off Campus Food Bank')) |>
+  mutate(Program = factor(Program, levels = c('BNC Food Pantry', 'SNAP/WIC', 'Off Campus Food Bank')))
 
 # Create barplot of food programs
 ggplot(data = food_programs, aes(x = Month, y = Count, fill = Program)) +
@@ -132,18 +145,14 @@ While referrals to the BNC Food Pantry are high, the bar chart above and the tab
 #| echo: false
 
 food_pantries <- referrals |>
-  filter(Program == c('Off.Campus.Food.Bank', 'BNC.Food.Pantry')) |>
-  mutate(Program = factor(Program, levels = c('BNC.Food.Pantry', 'Off.Campus.Food.Bank')))
+  filter(Program == c('Off Campus Food Bank', 'BNC Food Pantry')) |>
+  mutate(Program = factor(Program, levels = c('BNC Food Pantry', 'Off Campus Food Bank')))
 
 pantries_wide <- food_pantries |>
   pivot_wider(names_from = Program, values_from = Count)
 
 pantries_wide |>
   gt() |>
-  cols_label(
-    'BNC.Food.Pantry' = 'BNC Food Pantry',
-    'Off.Campus.Food.Bank' = 'Off Campus Food Bank'
-  ) |>
   tab_header(
     title = 'Food Pantry Referrals',
     subtitle = 'BNC Food Pantry has significantly higher referrals than off campus'
@@ -164,11 +173,7 @@ pantries_wide |>
 
 # Isolate housing programs
 housing_programs <- referrals |>
-  filter(Program == 'Housing.Org..or.Shelter' | Program == 'Housing.Authority') |>
-  mutate(Program = recode(Program,
-  'Housing.Org..or.Shelter' = 'Housing Org or Shelter',
-  'Housing.Authority' = 'Housing Authority'
-  ))
+  filter(Program == 'Housing Org or Shelter' | Program == 'Housing Authority')
 
 ggplot(data = housing_programs, aes(x = Month, y = Count, fill = Program)) +
   geom_col() +
@@ -190,7 +195,18 @@ topics <- topics |>
                 names_to = 'Program',
                 values_to = 'Count') |>
     rename(Month = Topic) |>
-    mutate(Month = factor(Month, levels = month_order))
+    mutate(Month = factor(Month, levels = month_order)) |>
+  mutate(Program = recode(Program,
+  'Academic.Resources...Support' = 'Academic Resources and Support',
+  'Emergency.Finances' = 'Emergency Finances',
+  'Career...Employment' = 'Career Employment',
+  'Personal.Hygiene.Items' = 'Personal Hygiene Items',
+  'Legal.Services' = 'Legal Services',
+  'Other.need.disclosed' = 'Other Need Disclosed',
+  'Physical.Health.Care' = 'Physical Health Care',
+  'Mental.Health.Care' = 'Mental Health Care',
+  'Disability.Services' = 'Disability Services'
+  ))
 
 ```
 
@@ -219,25 +235,6 @@ ggplot(topics_summary, aes(x = Program, y = Count)) +
 ```
 
 ### Three Main Topics
-
-```{r}
-#| label: Three Main Conversation Topics
-#| echo: false
-
-top3 <- topics |>
-  filter(Program == 'Food' | Program == 'Housing' | Program == 'Technology')
-
-ggplot(top3, aes(x = Month, y = Count, fill = Program)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  facet_wrap(~Program) +
-  scale_fill_manual(values = pal) +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-    text=element_text(size=11, family="sans")) +
-  labs(
-    title = 'Three Main Conversation Topics'
-  )
-```
 
 ```{r}
 #| echo: false
@@ -298,4 +295,24 @@ ggplot(food_pantries, aes(Program, Count, color = Program)) +
     title = 'Monthly Food Program Referrals',
   ) +
   scale_x_discrete(label = labels)
+```
+
+```{r}
+#| label: Three Main Conversation Topics
+#| echo: false
+#| eval: false
+
+top3 <- topics |>
+  filter(Program == 'Food' | Program == 'Housing' | Program == 'Technology')
+
+ggplot(top3, aes(x = Month, y = Count, fill = Program)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~Program) +
+  scale_fill_manual(values = pal) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+    text=element_text(size=11, family="sans")) +
+  labs(
+    title = 'Three Main Conversation Topics'
+  )
 ```
