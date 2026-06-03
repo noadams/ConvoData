@@ -1,5 +1,5 @@
 ---
-title: "Basic Needs Center: Peer Conversations"
+title: "Basic Needs Center: Peer Convos"
 author: "Noah Adams"
 date: today
 format: html
@@ -13,6 +13,8 @@ include-in-header:
 ```{r}
 #| label: Libraries
 #| echo: false
+
+# Import necessary libraries
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(gt))
 ```
@@ -28,6 +30,7 @@ pal <- c("#6C88C4","#FF828B","#FFB347")
 #| echo: false
 referrals <- read.csv('Referrals.csv')
 
+# Set month order for x-axis
 month_order <- c("Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr")
 
 referrals <- referrals |>
@@ -35,7 +38,9 @@ referrals <- referrals |>
                 names_to = 'Program',
                 values_to = 'Count') |>
     rename(Month = Referral) |>
+  # Change x-variable to month order
   mutate(Month = factor(Month, levels = month_order)) |>
+  # Change name of all referral programs
   mutate(Program = recode(Program,
   'BNC.Food.Pantry' = 'BNC Food Pantry',
   'SNAP.WIC' = 'SNAP/WIC',
@@ -56,7 +61,7 @@ referrals <- referrals |>
   'Student.Care' = 'Student Care'))
 ```
 
-# What is a Peer Conversation?
+# What is a Peer Convo?
 
 At the OSU Basic Needs Center, we have strategy conversations with students about housing, food, living on a limited budget, and anything else related to someone’s basic needs. Following these conversations, we fill out a form recording what referrals were made, and what the conversation was about. In this report, I hope to analyze and further explore the peer conversations we have at the BNC.
 
@@ -70,6 +75,7 @@ A noticeable pattern is the big surges of convos at the start of the term. The d
 #| label: Monthly Peer Convos
 #| echo: false
 
+# Manually set monthly conversations
 convo_counts = c(77, 51, 37, 17, 56, 23, 40, 44)
 
 convo_totals <- data.frame(Month = factor(month_order, levels = month_order), Count = convo_counts)
@@ -94,6 +100,7 @@ Frequently during convos, we refer people to other resources both on and off cam
 #| label: Summary of Referrals
 #| echo: false
 
+# Order referral categories by count
 referral_summary <- referrals |>
   group_by(Program) |>
   summarize(Count = sum(Count)) |>
@@ -142,13 +149,16 @@ While referrals to the BNC Food Pantry are high, the bar chart above and the tab
 #| label: Food Pantry Referrals Table
 #| echo: false
 
+# Only have Off Campus Food Bank and BNC Food Pantry
 food_pantries <- referrals |>
   filter(Program == c('Off Campus Food Bank', 'BNC Food Pantry')) |>
   mutate(Program = factor(Program, levels = c('BNC Food Pantry', 'Off Campus Food Bank')))
 
+# Make it wide :D
 pantries_wide <- food_pantries |>
   pivot_wider(names_from = Program, values_from = Count)
 
+# Create table from pantries data
 pantries_wide |>
   gt() |>
   tab_header(
@@ -196,6 +206,7 @@ topics <- topics |>
                 values_to = 'Count') |>
     rename(Month = Topic) |>
     mutate(Month = factor(Month, levels = month_order)) |>
+  # Rename topics
   mutate(Program = recode(Program,
   'Academic.Resources...Support' = 'Academic Resources and Support',
   'Emergency.Finances' = 'Emergency Finances',
@@ -218,6 +229,7 @@ Breaking down what kinds of conversations we are having, a clear trend arises of
 #| label: Summary of Topics
 #| echo: false
 
+# Order topics by count
 topics_summary <- topics |>
   group_by(Program) |>
   summarize(Count = sum(Count)) |>
@@ -239,6 +251,7 @@ ggplot(topics_summary, aes(x = Program, y = Count)) +
 ```{r}
 #| echo: false
 
+# Get the top 3 topics manually
 top3 <- topics |>
   filter(Program == 'Food' | Program == 'Housing' | Program == 'Technology')
 
