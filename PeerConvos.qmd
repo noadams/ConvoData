@@ -31,7 +31,7 @@ pal <- c("#6C88C4","#FF828B","#FFB347")
 referrals <- read.csv('Referrals.csv')
 
 # Set month order for x-axis
-month_order <- c("Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr")
+month_order <- c("Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May")
 
 referrals <- referrals |>
   pivot_longer(cols = -1,
@@ -76,7 +76,7 @@ A noticeable pattern is the big surges of convos at the start of the term. The d
 #| echo: false
 
 # Manually set monthly conversations
-convo_counts = c(77, 51, 37, 17, 56, 23, 40, 44)
+convo_counts = c(77, 51, 37, 17, 56, 23, 40, 44, 31)
 
 convo_totals <- data.frame(Month = factor(month_order, levels = month_order), Count = convo_counts)
 
