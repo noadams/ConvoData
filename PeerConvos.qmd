@@ -31,7 +31,7 @@ pal <- c("#6C88C4","#FF828B","#FFB347")
 referrals <- read.csv('Referrals.csv')
 
 # Set month order for x-axis
-month_order <- c("Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May")
+month_order <- c("Summer", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun")
 
 referrals <- referrals |>
   pivot_longer(cols = -1,
@@ -75,15 +75,18 @@ A noticeable pattern is the big surges of convos at the start of the term. The d
 #| label: Monthly Peer Convos
 #| echo: false
 
-# Manually set monthly conversations
-convo_counts = c(77, 51, 37, 17, 56, 23, 40, 44, 31)
+# Set month order
+convo_month_order <- c("Jul", "Aug", "Sep\n1-14", "Sep\n15-30", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun")
 
-convo_totals <- data.frame(Month = factor(month_order, levels = month_order), Count = convo_counts)
+# Manually set monthly conversations
+convo_counts = c(15, 3, 7, 77, 51, 37, 17, 56, 23, 40, 44, 31, 17)
+
+convo_totals <- data.frame(Month = factor(convo_month_order, levels = convo_month_order), Count = convo_counts)
 
 ggplot(convo_totals, aes(x = Month, y = Count)) +
   geom_col() +
   theme(text=element_text(size=13, family="sans")) +
-  geom_text(aes(label = Count), vjust = 2, color = "white", size = 3.5) +
+  geom_text(aes(label = Count), vjust = -0.45, color = "black", size = 3.5) +
   theme_bw() +
   labs(
     title = 'High number of convos at the start of the term'
