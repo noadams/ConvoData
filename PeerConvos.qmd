@@ -76,10 +76,10 @@ A noticeable pattern is the big surges of convos at the start of the term. The d
 #| echo: false
 
 # Set month order
-convo_month_order <- c("Jul", "Aug", "Sep\n1-14", "Sep\n15-30", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun")
+convo_month_order <- c("Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun")
 
 # Manually set monthly conversations
-convo_counts = c(15, 3, 7, 77, 51, 37, 17, 56, 23, 40, 44, 31, 17)
+convo_counts = c(15, 3, 84, 51, 37, 17, 56, 23, 40, 44, 31, 17)
 
 convo_totals <- data.frame(Month = factor(convo_month_order, levels = convo_month_order), Count = convo_counts)
 
@@ -117,6 +117,25 @@ ggplot(referral_summary, aes(x = Program, y = Count)) +
         text=element_text(size=13, family="sans")) +
   labs(
     title = 'BNC Programs are leading referrals'
+  )
+```
+
+### Referrals Excluding BNC Programs
+
+```{r}
+#| label: Summary of Referrals
+#| echo: false
+
+bad <- c("BNC Food Pantry", "BNC Program")
+no_bnc <- referral_summary[!grepl(paste(bad, collapse="|"), referral_summary$Program, ignore.case=TRUE), ]
+
+ggplot(no_bnc, aes(x = Program, y = Count)) +
+  geom_col() +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1),
+        text=element_text(size=13, family="sans")) +
+  labs(
+    title = 'Referrals Excluding BNC Programs'
   )
 ```
 
