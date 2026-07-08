@@ -123,7 +123,7 @@ ggplot(referral_summary, aes(x = Program, y = Count)) +
 ### Referrals Excluding BNC Programs
 
 ```{r}
-#| label: Summary of Referrals
+#| label: Summary of Referrals Excluding BNC
 #| echo: false
 
 bad <- c("BNC Food Pantry", "BNC Program")
